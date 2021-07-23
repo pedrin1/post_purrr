@@ -1,0 +1,198 @@
+---
+title: "ronronando"
+author: "Pedro de Brito"
+date: "06/07/2021"
+output: html_document
+---
+
+Neste post vamos falar de mais pacote da família tidyverse, o `purrr`. `purrr` é descrito como um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o `purrr` focando na sua principal função: `map()`.  
+
+Como já dito, o pacote pertence ao `tidyverse` então você pode carregá-lo pelo tidy usando o comando `library(tidyverse)` (o que normalmente acontece) ou separadamente `library(purrr)`. Para os exemplos do post iremos trabalhar com um banco de dados "iris" que o próprio R possui. Você pode olhar bases de dados que o R possui utilizando o comando `data()`
+
+
+
+
+```{r, message = F, warning=FALSE}
+library(purrr)
+library(dplyr)
+
+```
+
+
+# _"map()"_
+
+Dentre as diversas funções do pacote `purrr` uma das mais conhecidas e utilizadas é a `map()` e suas variações, nada mais justo do que começar falando dela. Essa função (e suas variações) é usada para aplicar a mesma ação/função a todos elementos de um objeto. Esses objetos podem ser uma lista, um vetor, variáveis de um banco de dados, etc.
+Esse tipo de função é muito útil para evitar usar loops e for's.
+  Se em algum momento você já fez uso da família de funções `apply()` você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções `apply()` e `map()`. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um  contexto. Em questão de tempo bruto de execução, a família `apply()` é ligeiramente mais rápida (a diferença é bem pequena). As funções de `map()` são mais convenientes. Todas as suas variações seguem a mesmo ordem de argumentos (o primeiro argumento é sempre o vetor), diferente de `apply()`. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de `map()`), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções do pacote `purrr`.
+
+Voltando ao foco, vamos mostrar algumas variações (não todas) de `map()`.
+  
+- `map(.x, .f)` é a principal função de mapeamento e retorna uma lista
+
+- `map_df(.x, .f)` retorna um quadro de dados
+
+- `map_dbl(.x, .f)` retorna um vetor numérico (duplo)
+
+- `map_chr(.x, .f)` retorna um vetor de caracteres
+
+- `map_lgl(.x, .f)` retorna um vetor lógico
+  
+Essas funções, assim como a maiores das funções do universo `tidyverse`, tem como primeiro argumento o objeto a qual você deseja mapear e o segundo argumento é a função a ser aplicada em cada elemento do seu objeto. Para ficar mais claro vamos a uma breve aplicação e ao decorrer do post, iremos utilizar mais as outras funções.
+Vamos criar um vetor com poucos elementos para usar como exemplo, depois criar uma função qualquer e usar o `map()` para aplicar essa função em cada elemento do vetor.
+
+
+```{r}
+vetor_ex <- c(0, 3, 6, 9, 12)
+
+funcao1 <- function(x){
+  return(x^2)
+}
+
+map(vetor_ex, funcao1)
+
+map_chr(vetor_ex, funcao1)
+```
+
+Note que usar apenas `map()`, como dito antes, ira retornar uma lista onde o primeiro elemento da saída é o resultado da aplicação da função ao primeiro elemento da entrada e assim por diante. 
+já quando usamos `map_dbl()` a função nos retorna um vetor de caracteres.
+
+Vamos agora criar uma lista com alguns vetores. Caso a gente queira, por exemplo, tirar a média de cada um dos vetores dentro da lista, precisaríamos fazer isso acessando cada elemento da lista, criando funções complexas ou utilizando for's e loop's. Veja abaixo como o `map()` pode nos ajudar. 
+
+```{r}
+lista_ex <- list(c(1, 2, 3),
+                 seq(0,100,10),
+                 c(1:10))
+
+lista_ex
+
+lista_ex %>% 
+  map(mean)
+
+lista_ex %>% 
+  map_dbl(sd)
+```
+
+Note também que fizemos o uso da função junto com o `pipe` e é bem comum essa prática. Lembrando que já explicamos como utilizar o pipe,  caso tenha alguma você pode acessar o post que contém essa explicação clickando [aqui](https://daslab-ufes.github.io/tidyverse/).
+
+Nos exemplos acima utilizamos uma função criada por nós e outras já presente dentro do R. Além dessas, também é possível fazer o que chamamos de funções anônimas. Uma função anônima é basicamente uma função criada e usada, mas nunca atribuída a uma variável. Esse tipo de função é bem útilizada dentro do `map()`. Para usar essa função você começa com um `~` (para indicar que você começou uma função anônima). O argumento da função é consultado utilizando o `.x` ou apenas `.` diferente das funções normais onde você consegue usar qualquer argumento. Para ficar mais claro vamos a um exemplo.
+
+```{r}
+map_dbl(vetor_ex, ~ .x ^2)
+
+vetor_ex %>% 
+  map_dbl(~ .x ^2)
+
+vetor_ex %>% 
+  map_dbl(~ . ^2)
+
+vetor_ex %>% 
+  map_dbl(~{.x ^2})
+```
+
+Acima mostramos maneiras diferentes de utilizar funções anônimas. Todas retornam o mesmo resultado (e deveriam). Um destaque para a última onde foi usado `{}`. O uso das chaves é interessante para organização e boas práticas no seu código, principalmente se a sua função for mais complexa.  
+
+
+Uma função muito útil também é a `modify()`. Ela funciona de forma igual á função `map()`, a diferença é que ela sempre irá retornar um objeto do mesmo tipo que o objeto de entrada. Por exemplo, se meu objeto de entradar um vetor de caracteres, a saída também será um vetor de caracteres. Também já fizemos um [post](https://daslab-ufes.github.io/boas-praticas/) sobre boas práticas no software R.
+
+
+```{r}
+objeto <- data.frame(x = c(1, 10, 11),
+                     y = c(9, 20, 30))
+
+modify(objeto, funcao1)
+```
+
+A função `modify()` possui uma variação interessante. A `modify_if()` permite que você forneça um critério e assim, a função só será aplicada aos elementos que atendam a esse critério. O critério torna-se o segundo argumento da função, ou seja, o primeiro argumento continua sendo o objeto de entrada, o segundo passa a ser o critério e o terceiro argumento é a função. Para ficar mais claro vamos a um exemplo
+
+
+```{r}
+
+modify_if(vetor_ex,
+          function(x) x >= 9,
+          funcao1)
+
+```
+
+Veja que a função só foi aplicada para valores maiores ou iguais a 9.
+
+Agora que temos uma noção de como funciona as funções `map()`, vamos deixar as coisas um pouco mais interessantes trabalho com base de dados. Para os exemplos do post iremos trabalhar com um banco de dados "iris" que o próprio R possui. Você pode olhar bases de dados que o R possui utilizando o comando `data()`
+
+
+
+```{r}
+dados <- iris
+# visualizando os 10 primeiros dados da tabela
+knitr::kable(head(dados, 10))
+```
+
+Como estamos trabalhando com um quadro de dados, as funções irão interar em cada coluna. Por exemplo, ao aplicar uma função para resumir de alguma maneira os dados, ela irá fazer isso para cada uma das colunas. Vamos começar utilizando a função `n_distinct` do pacote `dplyr` que nos retorna o número de valores distintos em cada coluna.
+
+```{r}
+
+dados %>% 
+  map_chr(n_distinct)
+  
+```
+
+Observe que `map_chr` aplicou a função desejada em cada uma das 5 variáveis do nosso banco de dados e retornou o valor correspondente.
+
+
+Vamos começar a fazer algo mais elaborado. Podemos querer retornar algumas medidas resumos ou outras informações gerais sobre nossos dados em um quadro de dados. Essa uma maneira bem legal e útil de utilizar o `map_df()`, uma das funções mais poderosas do pacote. Basicamente utilizamos a estrutura `map_df( ~ data_frame(x = .x" )`, onde x = o nome da coluna e .x a função anônima. Pra ficar mais claro, vamos à pratica.
+
+```{r}
+dados1 <- select_if(dados, is.numeric)
+dados1 <- dados1 %>% map_df(~(data.frame(v_distintos = n_distinct(.x),
+                              classe = class(.x),
+                              media = round(mean(.x), digits = 2),
+                              desvio_p = round(sd(.x), digits = 2),
+                              minimo = min(.x),
+                              maximo = max(.x))),
+                 .id = "variavel")
+
+```
+
+No exemplo acima, começamos utilizando a função `select_if()` do pacote dplyr para pegar, do banco de dados original, apenas as variáveis do tipo númericas e armazenamos em um outro banco de dados (apenas para facilitar o entendimento). Após isso já começamos a pensar na medidas que queremos para acrescentar no banco de dados. Adicionamos então os valores distintos de cada variável, as classes (apenas para mostrar que `select_if()` fez o que queriamos) e algumas medidas resumo como média, desvio padrão, valores máximos e mínimos. Uma observação importante é que ao utilizar essa função de mapa, o nome das variáveis são perdidos, por isso ao fim do código foi utilizado o `.id` (argumento de `map_df()`) para incluir o nome das variáveis. Veja o resultado. 
+
+```{r}
+
+knitr::kable(head(dados1))
+
+```
+
+
+# _"map2()"_
+
+Após obtermos uma certa noção de como funcionam as funções de `map()` podemos falar de sua outra versão, a `map2()`. Essa função segue os mesmos critérios que a `map()` "originial", porém permite que você trabalhe não só com um, mas com dois objetos. Em `map2()` também conseguimos especificar o tipo de saída da função, segue abaixo a lista de algumas das variações da função.
+
+
+- `map2 (.x, .y, .f, ...)`
+
+- `map2_dfc (.x, .y, .f, ...)`
+
+- `map2_dbl (.x, .y, .f, ...)`
+
+- `map2_chr (.x, .y, .f, ...)`
+
+- `map2_lgl (.x, .y, .f, ...)`
+
+
+lembrando que `.x` e `.y` são os vetores da função e devem ter o mesmo tamanho, caso contrário a função retornará uma mensagem de erro .
+
+
+```{r}
+dados3 <- dados %>% 
+  group_by(Sepal.Width, Species) %>% 
+  summarise(n = n())
+
+largura <- dados3$Sepal.Width
+
+especie <- dados3$Species
+
+
+fmp2<- function(x, y) paste("Largura", x, "da espécie", y)
+
+map2_chr(largura, especie, fmp2) %>% head(5)
+
+```
+
+Acima criamos dois vetores, cada um contendo uma variável do banco de dados e depois criamos uma função simples, que irá concatenar, nesse caso, os dois vetores com algumas frases. Note que a função foi aplciada aos dois vetores. Neste caso usamos `map2_chr()` para retornar em formato de caractere. Uma observação é que no começo do exemplo criamos um outro banco de dados (dados3) com apenas as duas variáveis que foi usa da no exemplo e agrupamos elas utlizando `group_by` e`summarise()`. Isso foi feito apenas para que fosse possível ver os resultados com observações diferentes na saida da função.
