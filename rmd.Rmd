@@ -23,7 +23,7 @@ library(dplyr)
 
 Dentre as diversas funções do pacote `purrr` uma das mais conhecidas e utilizadas é a `map()` e suas variações, nada mais justo do que começar falando dela. Essa função (e suas variações) é usada para aplicar a mesma ação/função a todos elementos de um objeto. Esses objetos podem ser uma lista, um vetor, variáveis de um banco de dados, etc.
 Esse tipo de função é muito útil para evitar usar loops e for's.
-  Se em algum momento você já fez uso da família de funções `apply()` você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções `apply()` e `map()`. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um  contexto. Em questão de tempo bruto de execução, a família `apply()` é ligeiramente mais rápida (a diferença é bem pequena). As funções de `map()` são mais convenientes. Todas as suas variações seguem a mesmo ordem de argumentos (o primeiro argumento é sempre o vetor), diferente de `apply()`. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de `map()`), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções do pacote `purrr`.
+  Se em algum momento você já fez uso da família de funções `apply()` você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções `apply()` e `map()`. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um  contexto. Em questão de tempo bruto de execução, a família `apply()` é ligeiramente mais rápida (a diferença é bem pequena). As funções de `map()` são mais convenientes. Todas as suas variações seguem a mesmo ordem de argumentos (o primeiro argumento é sempre o vetor), diferente da família `apply()`, onde os argumentos podem mudar. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de `map()`), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções obtidas por meio de pacotes, neste caso o `purrr`.
 
 Voltando ao foco, vamos mostrar algumas variações (não todas) de `map()`.
   
@@ -176,7 +176,7 @@ Após obtermos uma certa noção de como funcionam as funções de `map()` podem
 - `map2_lgl (.x, .y, .f, ...)`
 
 
-lembrando que `.x` e `.y` são os vetores da função e devem ter o mesmo tamanho, caso contrário a função retornará uma mensagem de erro .
+lembrando que `.x` e `.y` são os vetores da função e devem ter o mesmo tamanho, caso contrário a função retornará uma mensagem de erro . 
 
 
 ```{r}
@@ -189,10 +189,19 @@ largura <- dados3$Sepal.Width
 especie <- dados3$Species
 
 
-fmp2<- function(x, y) paste("Largura", x, "da espécie", y)
+fmp2<- function(x, y) paste("Espécie:", x, "largura:", y)
 
-map2_chr(largura, especie, fmp2) %>% head(5)
+map2_chr(especie, largura, fmp2) %>% head(5)
 
 ```
 
 Acima criamos dois vetores, cada um contendo uma variável do banco de dados e depois criamos uma função simples, que irá concatenar, nesse caso, os dois vetores com algumas frases. Note que a função foi aplciada aos dois vetores. Neste caso usamos `map2_chr()` para retornar em formato de caractere. Uma observação é que no começo do exemplo criamos um outro banco de dados (dados3) com apenas as duas variáveis que foi usa da no exemplo e agrupamos elas utlizando `group_by` e`summarise()`. Isso foi feito apenas para que fosse possível ver os resultados com observações diferentes na saida da função.
+
+
+É possível utilizar o `map()` para mais de dois objetos. Neste caso nãos existe um `map3()` ou `map4()` mas sim o `pmap()`. `pmap()` é basicamente uma generalização de `map2()` para 3 ou mais objetos. Essa função possui uma pequena diferença, nesse caso você não irá especificar n objetos dentro da função, mas sim apenas uma única lista que contém todos os vetores (ou listas).
+
+
+
+
+
+
