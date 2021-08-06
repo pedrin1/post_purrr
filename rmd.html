@@ -172,22 +172,23 @@ pre code {
 </div>
 
 
-<p>Neste post vamos falar de mais pacote da família tidyverse, o <code>purrr</code>. <code>purrr</code> é descrito como um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o <code>purrr</code> focando na sua principal função: <code>map()</code>.</p>
-<p>Como já dito, o pacote pertence ao <code>tidyverse</code> então você pode carregá-lo pelo tidy usando o comando <code>library(tidyverse)</code> (o que normalmente acontece) ou separadamente <code>library(purrr)</code>. Para os exemplos do post iremos trabalhar com um banco de dados “iris” que o próprio R possui. Você pode olhar bases de dados que o R possui utilizando o comando <code>data()</code></p>
+<p>Neste post vamos falar de mais um pacote da família tidyverse: o <code>purrr</code>. <code>purrr</code> é um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o <code>purrr</code> focando na sua principal função: <code>map()</code>.</p>
+<p>Como já dito, o pacote pertence ao <code>tidyverse</code> então você pode carregá-lo pelo usando o comando <code>library(tidyverse)</code> ou separadamente <code>library(purrr)</code>. Para os exemplos do post iremos trabalhar com um banco de dados <code>iris</code> que o próprio R possui. Você pode carregar bases de dados que o R possui utilizando o comando <code>data()</code></p>
 <pre class="r"><code>library(purrr)
 library(dplyr)</code></pre>
 <div id="map" class="section level1">
 <h1><em>“map()”</em></h1>
-<p>Dentre as diversas funções do pacote <code>purrr</code> uma das mais conhecidas e utilizadas é a <code>map()</code> e suas variações, nada mais justo do que começar falando dela. Essa função (e suas variações) é usada para aplicar a mesma ação/função a todos elementos de um objeto. Esses objetos podem ser uma lista, um vetor, variáveis de um banco de dados, etc. Esse tipo de função é muito útil para evitar usar loops e for’s. Se em algum momento você já fez uso da família de funções <code>apply()</code> você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções <code>apply()</code> e <code>map()</code>. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um contexto. Em questão de tempo bruto de execução, a família <code>apply()</code> é ligeiramente mais rápida (a diferença é bem pequena). As funções de <code>map()</code> são mais convenientes. Todas as suas variações seguem a mesmo ordem de argumentos (o primeiro argumento é sempre o vetor), diferente de <code>apply()</code>. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de <code>map()</code>), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções do pacote <code>purrr</code>.</p>
+<p>Dentre as diversas funções do pacote <code>purrr</code> uma das mais conhecidas e utilizadas é a <code>map()</code> e suas variações, nada mais justo do que começar falando dela. Essa função (e suas variações) é usada para aplicar a mesma ação/função a todos elementos de um objeto. Esses objetos podem ser uma lista, um vetor, variáveis de um banco de dados, etc. Esse tipo de função é muito útil para evitar usar <em>loops</em> e <code>for</code>’s.</p>
+<p>Se em algum momento você já fez uso da família de funções <code>apply()</code> você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções <code>apply()</code> e <code>map()</code>. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um contexto. Em questão de tempo bruto de execução, a família <code>apply()</code> é ligeiramente mais rápida (a diferença é bem pequena), porém as funções de <code>map()</code> são mais convenientes. Todas as suas variações seguem a mesma ordem de argumentos (o primeiro argumento é sempre o vetor), diferente da família <code>apply()</code>, onde os argumentos podem mudar. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de <code>map()</code>), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções obtidas por meio de pacotes, neste caso o <code>purrr</code>.</p>
 <p>Voltando ao foco, vamos mostrar algumas variações (não todas) de <code>map()</code>.</p>
 <ul>
-<li><p><code>map(.x, .f)</code> é a principal função de mapeamento e retorna uma lista</p></li>
-<li><p><code>map_df(.x, .f)</code> retorna um quadro de dados</p></li>
-<li><p><code>map_dbl(.x, .f)</code> retorna um vetor numérico (duplo)</p></li>
-<li><p><code>map_chr(.x, .f)</code> retorna um vetor de caracteres</p></li>
-<li><p><code>map_lgl(.x, .f)</code> retorna um vetor lógico</p></li>
+<li><p><code>map(.x, .f)</code> é a principal função de mapeamento e retorna uma lista.</p></li>
+<li><p><code>map_df(.x, .f)</code> retorna um <code>data.frame</code>.</p></li>
+<li><p><code>map_dbl(.x, .f)</code> retorna um vetor numérico (duplo).</p></li>
+<li><p><code>map_chr(.x, .f)</code> retorna um vetor de caracteres.</p></li>
+<li><p><code>map_lgl(.x, .f)</code> retorna um vetor lógico.</p></li>
 </ul>
-<p>Essas funções, assim como a maiores das funções do universo <code>tidyverse</code>, tem como primeiro argumento o objeto a qual você deseja mapear e o segundo argumento é a função a ser aplicada em cada elemento do seu objeto. Para ficar mais claro vamos a uma breve aplicação e ao decorrer do post, iremos utilizar mais as outras funções. Vamos criar um vetor com poucos elementos para usar como exemplo, depois criar uma função qualquer e usar o <code>map()</code> para aplicar essa função em cada elemento do vetor.</p>
+<p>Essas funções, assim como a maiores das funções do universo <code>tidyverse</code>, tem como primeiro argumento o objeto a qual você deseja aplicar uma certa função e o segundo argumento é a função a ser aplicada em cada elemento do seu objeto. Para ficar mais claro vamos a uma breve aplicação e ao decorrer do post, iremos utilizar mais as outras funções. Vamos criar um vetor com poucos elementos para usar como exemplo, depois criar uma função qualquer e usar o <code>map()</code> para aplicar essa função em cada elemento do vetor.</p>
 <pre class="r"><code>vetor_ex &lt;- c(0, 3, 6, 9, 12)
 
 funcao1 &lt;- function(x){
@@ -211,7 +212,7 @@ map(vetor_ex, funcao1)</code></pre>
 ## [1] 144</code></pre>
 <pre class="r"><code>map_chr(vetor_ex, funcao1)</code></pre>
 <pre><code>## [1] &quot;0.000000&quot;   &quot;9.000000&quot;   &quot;36.000000&quot;  &quot;81.000000&quot;  &quot;144.000000&quot;</code></pre>
-<p>Note que usar apenas <code>map()</code>, como dito antes, ira retornar uma lista onde o primeiro elemento da saída é o resultado da aplicação da função ao primeiro elemento da entrada e assim por diante. já quando usamos <code>map_dbl()</code> a função nos retorna um vetor de caracteres.</p>
+<p>Note que usar apenas <code>map()</code>, como dito antes, irá retornar uma lista onde o primeiro elemento da saída é o resultado da aplicação da função ao primeiro elemento da entrada e assim por diante. já quando usamos <code>map_chr()</code> a função nos retorna um vetor de caracteres.</p>
 <p>Vamos agora criar uma lista com alguns vetores. Caso a gente queira, por exemplo, tirar a média de cada um dos vetores dentro da lista, precisaríamos fazer isso acessando cada elemento da lista, criando funções complexas ou utilizando for’s e loop’s. Veja abaixo como o <code>map()</code> pode nos ajudar.</p>
 <pre class="r"><code>lista_ex &lt;- list(c(1, 2, 3),
                  seq(0,100,10),
@@ -239,8 +240,8 @@ lista_ex</code></pre>
 <pre class="r"><code>lista_ex %&gt;% 
   map_dbl(sd)</code></pre>
 <pre><code>## [1]  1.00000 33.16625  3.02765</code></pre>
-<p>Note também que fizemos o uso da função junto com o <code>pipe</code> e é bem comum essa prática. Lembrando que já explicamos como utilizar o pipe, caso tenha alguma você pode acessar o post que contém essa explicação clickando <a href="https://daslab-ufes.github.io/tidyverse/">aqui</a>.</p>
-<p>Nos exemplos acima utilizamos uma função criada por nós e outras já presente dentro do R. Além dessas, também é possível fazer o que chamamos de funções anônimas. Uma função anônima é basicamente uma função criada e usada, mas nunca atribuída a uma variável. Esse tipo de função é bem útilizada dentro do <code>map()</code>. Para usar essa função você começa com um <code>~</code> (para indicar que você começou uma função anônima). O argumento da função é consultado utilizando o <code>.x</code> ou apenas <code>.</code> diferente das funções normais onde você consegue usar qualquer argumento. Para ficar mais claro vamos a um exemplo.</p>
+<p>Note também que fizemos o uso da função junto com o <em>pipe</em> e é bem comum essa prática. Lembrando que já explicamos como utilizar o <em>pipe</em>, caso tenha alguma dúvida você pode acessar o post que contém essa explicação cliquando <a href="https://daslab-ufes.github.io/tidyverse/">aqui</a>.</p>
+<p>Nos exemplos acima utilizamos uma função criada por nós e outras já presentes dentro do R. Além dessas, também é possível fazer o que chamamos de funções anônimas. Uma função anônima é basicamente uma função criada e usada, mas nunca atribuída a um objeto. Esse tipo de função é bem útilizada dentro do <code>map()</code>. Para usar essa função você começa com um <code>~</code> (para indicar que você começou uma função anônima). O argumento da função é consultado utilizando o <code>.x</code> ou apenas <code>.</code>, diferente das funções normais onde você consegue usar qualquer argumento. Para ficar mais claro vamos a um exemplo.</p>
 <pre class="r"><code>map_dbl(vetor_ex, ~ .x ^2)</code></pre>
 <pre><code>## [1]   0   9  36  81 144</code></pre>
 <pre class="r"><code>vetor_ex %&gt;% 
@@ -253,7 +254,7 @@ lista_ex</code></pre>
   map_dbl(~{.x ^2})</code></pre>
 <pre><code>## [1]   0   9  36  81 144</code></pre>
 <p>Acima mostramos maneiras diferentes de utilizar funções anônimas. Todas retornam o mesmo resultado (e deveriam). Um destaque para a última onde foi usado <code>{}</code>. O uso das chaves é interessante para organização e boas práticas no seu código, principalmente se a sua função for mais complexa.</p>
-<p>Uma função muito útil também é a <code>modify()</code>. Ela funciona de forma igual á função <code>map()</code>, a diferença é que ela sempre irá retornar um objeto do mesmo tipo que o objeto de entrada. Por exemplo, se meu objeto de entradar um vetor de caracteres, a saída também será um vetor de caracteres. Também já fizemos um <a href="https://daslab-ufes.github.io/boas-praticas/">post</a> sobre boas práticas no software R.</p>
+<p>Uma função muito útil também é a <code>modify()</code>. Ela funciona de forma igual à função <code>map()</code>, a diferença é que ela sempre irá retornar um objeto do mesmo tipo que o objeto de entrada. Por exemplo, se meu objeto de entradar um vetor de caracteres, a saída também será um vetor de caracteres. Também já fizemos um <a href="https://daslab-ufes.github.io/boas-praticas/">post</a> sobre boas práticas no software R.</p>
 <pre class="r"><code>objeto &lt;- data.frame(x = c(1, 10, 11),
                      y = c(9, 20, 30))
 
@@ -268,7 +269,7 @@ modify(objeto, funcao1)</code></pre>
           funcao1)</code></pre>
 <pre><code>## [1]   0   3   6  81 144</code></pre>
 <p>Veja que a função só foi aplicada para valores maiores ou iguais a 9.</p>
-<p>Agora que temos uma noção de como funciona as funções <code>map()</code>, vamos deixar as coisas um pouco mais interessantes trabalho com base de dados. Para os exemplos do post iremos trabalhar com um banco de dados “iris” que o próprio R possui. Você pode olhar bases de dados que o R possui utilizando o comando <code>data()</code></p>
+<p>Agora que temos uma noção de como funciona as funções <code>map()</code>, vamos deixar as coisas um pouco mais interessantes trabalhando com uma base de dados. Para os exemplos do post iremos trabalhar com um banco de dados “iris” que o próprio R possui. Você pode olhar bases de dados que o R possui utilizando o comando <code>data()</code></p>
 <pre class="r"><code>dados &lt;- iris
 # visualizando os 10 primeiros dados da tabela
 knitr::kable(head(dados, 10))</code></pre>
@@ -355,12 +356,24 @@ knitr::kable(head(dados, 10))</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Como estamos trabalhando com um quadro de dados, as funções irão interar em cada coluna. Por exemplo, ao aplicar uma função para resumir de alguma maneira os dados, ela irá fazer isso para cada uma das colunas. Vamos começar utilizando a função <code>n_distinct</code> do pacote <code>dplyr</code> que nos retorna o número de valores distintos em cada coluna.</p>
+<p>Como estamos trabalhando com uma base de dados, as funções serão aplicadas em cada coluna. Por exemplo, ao aplicar uma função para resumir de alguma maneira os dados, ela irá fazer isso para cada uma das colunas. Vamos começar utilizando a função <code>n_distinct</code> do pacote <code>dplyr</code> que nos retorna o número de valores distintos em cada coluna.</p>
 <pre class="r"><code>dados %&gt;% 
-  map_chr(n_distinct)</code></pre>
-<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
-##         &quot;35&quot;         &quot;23&quot;         &quot;43&quot;         &quot;22&quot;          &quot;3&quot;</code></pre>
-<p>Observe que <code>map_chr</code> aplicou a função desejada em cada uma das 5 variáveis do nosso banco de dados e retornou o valor correspondente.</p>
+  map(n_distinct)</code></pre>
+<pre><code>## $Sepal.Length
+## [1] 35
+## 
+## $Sepal.Width
+## [1] 23
+## 
+## $Petal.Length
+## [1] 43
+## 
+## $Petal.Width
+## [1] 22
+## 
+## $Species
+## [1] 3</code></pre>
+<p>Observe que <code>map</code> aplicou a função desejada em cada uma das 5 variáveis do nosso banco de dados e retornou o valor correspondente.</p>
 <p>Vamos começar a fazer algo mais elaborado. Podemos querer retornar algumas medidas resumos ou outras informações gerais sobre nossos dados em um quadro de dados. Essa uma maneira bem legal e útil de utilizar o <code>map_df()</code>, uma das funções mais poderosas do pacote. Basicamente utilizamos a estrutura <code>map_df( ~ data_frame(x = .x&quot; )</code>, onde x = o nome da coluna e .x a função anônima. Pra ficar mais claro, vamos à pratica.</p>
 <pre class="r"><code>dados1 &lt;- select_if(dados, is.numeric)
 dados1 &lt;- dados1 %&gt;% map_df(~(data.frame(v_distintos = n_distinct(.x),
@@ -369,8 +382,14 @@ dados1 &lt;- dados1 %&gt;% map_df(~(data.frame(v_distintos = n_distinct(.x),
                               desvio_p = round(sd(.x), digits = 2),
                               minimo = min(.x),
                               maximo = max(.x))),
-                 .id = &quot;variavel&quot;)</code></pre>
-<p>No exemplo acima, começamos utilizando a função <code>select_if()</code> do pacote dplyr para pegar, do banco de dados original, apenas as variáveis do tipo númericas e armazenamos em um outro banco de dados (apenas para facilitar o entendimento). Após isso já começamos a pensar na medidas que queremos para acrescentar no banco de dados. Adicionamos então os valores distintos de cada variável, as classes (apenas para mostrar que <code>select_if()</code> fez o que queriamos) e algumas medidas resumo como média, desvio padrão, valores máximos e mínimos. Uma observação importante é que ao utilizar essa função de mapa, o nome das variáveis são perdidos, por isso ao fim do código foi utilizado o <code>.id</code> (argumento de <code>map_df()</code>) para incluir o nome das variáveis. Veja o resultado.</p>
+                 .id = &quot;variavel&quot;)
+dados1</code></pre>
+<pre><code>##       variavel v_distintos  classe media desvio_p minimo maximo
+## 1 Sepal.Length          35 numeric  5.84     0.83    4.3    7.9
+## 2  Sepal.Width          23 numeric  3.06     0.44    2.0    4.4
+## 3 Petal.Length          43 numeric  3.76     1.77    1.0    6.9
+## 4  Petal.Width          22 numeric  1.20     0.76    0.1    2.5</code></pre>
+<p>No exemplo acima, começamos utilizando a função <code>select_if()</code> do pacote <code>dplyr</code> para pegar, do banco de dados original, apenas as variáveis do tipo númericas e armazenamos em um outro banco de dados (apenas para facilitar o entendimento). Após isso já começamos a pensar na medidas que queremos para acrescentar no banco de dados. Adicionamos então os valores distintos de cada variável, as classes (apenas para mostrar que <code>select_if()</code> fez o que queriamos) e algumas medidas resumo como média, desvio padrão, valores máximos e mínimos. Uma observação importante é que ao utilizar essa função de <code>map</code>, o nome das variáveis são perdidos, por isso ao fim do código foi utilizado o <code>.id</code> (argumento de <code>map_df()</code>) para incluir o nome das variáveis. Veja o resultado.</p>
 <pre class="r"><code>knitr::kable(head(dados1))</code></pre>
 <table>
 <thead>
@@ -426,7 +445,7 @@ dados1 &lt;- dados1 %&gt;% map_df(~(data.frame(v_distintos = n_distinct(.x),
 </div>
 <div id="map2" class="section level1">
 <h1><em>“map2()”</em></h1>
-<p>Após obtermos uma certa noção de como funcionam as funções de <code>map()</code> podemos falar de sua outra versão, a <code>map2()</code>. Essa função segue os mesmos critérios que a <code>map()</code> “originial”, porém permite que você trabalhe não só com um, mas com dois objetos. Em <code>map2()</code> também conseguimos especificar o tipo de saída da função, segue abaixo a lista de algumas das variações da função.</p>
+<p>Após obtermos uma certa noção de como funcionam as funções de <code>map()</code> podemos falar de sua outra versão, a <code>map2()</code>. Essa função segue os mesmos critérios que a <code>map()</code> “original”, porém permite que você trabalhe não só com um, mas com dois objetos. Em <code>map2()</code> também conseguimos especificar o tipo de saída da função, segue abaixo a lista de algumas das variações da função.</p>
 <ul>
 <li><p><code>map2 (.x, .y, .f, ...)</code></p></li>
 <li><p><code>map2_dfc (.x, .y, .f, ...)</code></p></li>
@@ -434,7 +453,7 @@ dados1 &lt;- dados1 %&gt;% map_df(~(data.frame(v_distintos = n_distinct(.x),
 <li><p><code>map2_chr (.x, .y, .f, ...)</code></p></li>
 <li><p><code>map2_lgl (.x, .y, .f, ...)</code></p></li>
 </ul>
-<p>lembrando que <code>.x</code> e <code>.y</code> são os vetores da função e devem ter o mesmo tamanho, caso contrário a função retornará uma mensagem de erro .</p>
+<p>Lembrando que <code>.x</code> e <code>.y</code> são os vetores da função e devem ter o mesmo tamanho, caso contrário a função retornará uma mensagem de erro.</p>
 <pre class="r"><code>dados3 &lt;- dados %&gt;% 
   group_by(Sepal.Width, Species) %&gt;% 
   summarise(n = n())</code></pre>
@@ -443,14 +462,165 @@ dados1 &lt;- dados1 %&gt;% map_df(~(data.frame(v_distintos = n_distinct(.x),
 
 especie &lt;- dados3$Species
 
+fmp2 &lt;- function(x, y) paste(&quot;Espécie:&quot;, x, &quot;largura:&quot;, y)
 
-fmp2&lt;- function(x, y) paste(&quot;Largura&quot;, x, &quot;da espécie&quot;, y)
+map2(especie, largura, fmp2) %&gt;% head(5)</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;Espécie: versicolor largura: 2&quot;
+## 
+## [[2]]
+## [1] &quot;Espécie: versicolor largura: 2.2&quot;
+## 
+## [[3]]
+## [1] &quot;Espécie: virginica largura: 2.2&quot;
+## 
+## [[4]]
+## [1] &quot;Espécie: setosa largura: 2.3&quot;
+## 
+## [[5]]
+## [1] &quot;Espécie: versicolor largura: 2.3&quot;</code></pre>
+<p>Acima criamos dois vetores, cada um contendo uma variável do banco de dados e depois criamos uma função simples, que irá concatenar, nesse caso, os dois vetores com algumas frases. Note que a função foi aplicada aos dois vetores. Uma observação é que no começo do exemplo criamos um outro banco de dados (dados3) com apenas as duas variáveis que foi usada no exemplo e agrupamos elas utlizando <code>group_by</code> e<code>summarise()</code>. Isso foi feito apenas para que fosse possível ver os resultados com observações diferentes na saida da função.</p>
+<p>É possível utilizar o <code>map()</code> para mais de dois objetos. Neste caso não existe um <code>map3()</code> ou <code>map4()</code> mas sim o <code>pmap()</code>. <code>pmap()</code> é basicamente uma generalização de <code>map2()</code> para 3 ou mais objetos. Essa função possui uma pequena diferença, nesse caso você não irá especificar n objetos dentro da função, mas sim apenas uma única lista que contém todos os vetores (ou listas).</p>
+<div id="um-uso-um-pouco-mais-elaborado-de-map2" class="section level3">
+<h3>Um uso um pouco mais elaborado de “map2()”</h3>
+<p>Veja o exemplo a seguir</p>
+<pre class="r"><code>especies &lt;- iris %&gt;%  
+  split(.$Species)
 
-map2_chr(largura, especie, fmp2) %&gt;% head(5)</code></pre>
-<pre><code>## [1] &quot;Largura 2 da espécie versicolor&quot;   &quot;Largura 2.2 da espécie versicolor&quot;
-## [3] &quot;Largura 2.2 da espécie virginica&quot;  &quot;Largura 2.3 da espécie setosa&quot;    
-## [5] &quot;Largura 2.3 da espécie versicolor&quot;</code></pre>
-<p>Acima criamos dois vetores, cada um contendo uma variável do banco de dados e depois criamos uma função simples, que irá concatenar, nesse caso, os dois vetores com algumas frases. Note que a função foi aplciada aos dois vetores. Neste caso usamos <code>map2_chr()</code> para retornar em formato de caractere. Uma observação é que no começo do exemplo criamos um outro banco de dados (dados3) com apenas as duas variáveis que foi usa da no exemplo e agrupamos elas utlizando <code>group_by</code> e<code>summarise()</code>. Isso foi feito apenas para que fosse possível ver os resultados com observações diferentes na saida da função.</p>
+modelos &lt;- especies %&gt;% 
+  map(~ lm (Sepal.Length ~ Petal.Length, iris ))
+
+map2(modelos, especies, predict)</code></pre>
+<pre><code>## $setosa
+##        1        2        3        4        5        6        7        8 
+## 4.879095 4.879095 4.838202 4.919987 4.879095 5.001771 4.879095 4.919987 
+##        9       10       11       12       13       14       15       16 
+## 4.879095 4.919987 4.919987 4.960879 4.879095 4.756418 4.797310 4.919987 
+##       17       18       19       20       21       22       23       24 
+## 4.838202 4.879095 5.001771 4.919987 5.001771 4.919987 4.715526 5.001771 
+##       25       26       27       28       29       30       31       32 
+## 5.083556 4.960879 4.960879 4.919987 4.879095 4.960879 4.960879 4.919987 
+##       33       34       35       36       37       38       39       40 
+## 4.919987 4.879095 4.919987 4.797310 4.838202 4.879095 4.838202 4.919987 
+##       41       42       43       44       45       46       47       48 
+## 4.838202 4.838202 4.838202 4.960879 5.083556 4.879095 4.960879 4.879095 
+##       49       50 
+## 4.919987 4.879095 
+## 
+## $versicolor
+##       51       52       53       54       55       56       57       58 
+## 6.228538 6.146754 6.310323 5.942293 6.187646 6.146754 6.228538 5.656047 
+##       59       60       61       62       63       64       65       66 
+## 6.187646 5.901400 5.737831 6.024077 5.942293 6.228538 5.778724 6.105861 
+##       67       68       69       70       71       72       73       74 
+## 6.146754 5.983185 6.146754 5.901400 6.269430 5.942293 6.310323 6.228538 
+##       75       76       77       78       79       80       81       82 
+## 6.064969 6.105861 6.269430 6.351215 6.146754 5.737831 5.860508 5.819616 
+##       83       84       85       86       87       88       89       90 
+## 5.901400 6.392107 6.146754 6.146754 6.228538 6.105861 5.983185 5.942293 
+##       91       92       93       94       95       96       97       98 
+## 6.105861 6.187646 5.942293 5.656047 6.024077 6.024077 6.024077 6.064969 
+##       99      100 
+## 5.533370 5.983185 
+## 
+## $virginica
+##      101      102      103      104      105      106      107      108 
+## 6.760137 6.392107 6.719245 6.596568 6.678353 7.005490 6.146754 6.882814 
+##      109      110      111      112      113      114      115      116 
+## 6.678353 6.801029 6.392107 6.473891 6.555676 6.351215 6.392107 6.473891 
+##      117      118      119      120      121      122      123      124 
+## 6.555676 7.046383 7.128167 6.351215 6.637460 6.310323 7.046383 6.310323 
+##      125      126      127      128      129      130      131      132 
+## 6.637460 6.760137 6.269430 6.310323 6.596568 6.678353 6.801029 6.923706 
+##      133      134      135      136      137      138      139      140 
+## 6.596568 6.392107 6.596568 6.801029 6.596568 6.555676 6.269430 6.514784 
+##      141      142      143      144      145      146      147      148 
+## 6.596568 6.392107 6.392107 6.719245 6.637460 6.432999 6.351215 6.432999 
+##      149      150 
+## 6.514784 6.392107</code></pre>
+<p>Primeiro usamos a função <code>split</code> que divide os dados de entrada (x) em grupos diferentes (f). Um breve exemplo de como a função funciona.</p>
+<pre class="r"><code>sp &lt;- c(a = 1, b = 25, b = &quot;exemplo&quot;, a = &quot;split&quot;, a = 3)
+sp</code></pre>
+<pre><code>##         a         b         b         a         a 
+##       &quot;1&quot;      &quot;25&quot; &quot;exemplo&quot;   &quot;split&quot;       &quot;3&quot;</code></pre>
+<pre class="r"><code>split(sp, f = names(sp))</code></pre>
+<pre><code>## $a
+##       a       a       a 
+##     &quot;1&quot; &quot;split&quot;     &quot;3&quot; 
+## 
+## $b
+##         b         b 
+##      &quot;25&quot; &quot;exemplo&quot;</code></pre>
+<p>No caso do nosso exemplo o objeto “especies” vai ser uma lista com as 3 <code>Species</code> presentes no banco de dados iris.</p>
+<p>Depois partimos para criar o nosso modelo. Com ajuda da função <code>map</code>, utilizamos a função <code>lm</code> para criar o nosso modelo de regressão linear. A função <code>lm</code> possui vários argumentos e maneiras de utilizar, não é nosso foco aprofundar nessa função, mas você pode saber mais clickando <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm">aqui</a>. De maneira geral, fornecemos a função A variável preditora (ou independente) que nesse caso foi <code>Petal.Length</code> e a variável dependente (aquela que estamos tentando prever) que foi <code>Sepal.Length</code>, o segundo argumento é o banco de dados, nesse caso “iris”, note o modelo segue “YVAR ~ XVAR”. Vamos dar uma olhada apenas em uma parte da função para entender melhor</p>
+<pre class="r"><code>especies %&gt;% 
+  map(~ lm (Sepal.Length ~ Petal.Length, iris ))</code></pre>
+<pre><code>## $setosa
+## 
+## Call:
+## lm(formula = Sepal.Length ~ Petal.Length, data = iris)
+## 
+## Coefficients:
+##  (Intercept)  Petal.Length  
+##       4.3066        0.4089  
+## 
+## 
+## $versicolor
+## 
+## Call:
+## lm(formula = Sepal.Length ~ Petal.Length, data = iris)
+## 
+## Coefficients:
+##  (Intercept)  Petal.Length  
+##       4.3066        0.4089  
+## 
+## 
+## $virginica
+## 
+## Call:
+## lm(formula = Sepal.Length ~ Petal.Length, data = iris)
+## 
+## Coefficients:
+##  (Intercept)  Petal.Length  
+##       4.3066        0.4089</code></pre>
+<p>O modelo linear retornou o comprimento da pétala (Petal.Length) de acordo com nosso comportamento de dados de entrada, comprimento da sépala (Sepal.Length). Note que para esse caso, para este banco de dados, os valores retornados em cada espécie são os mesmos.</p>
+<p>Por fim fizemos o uso de <code>map2</code> com os os objetos “modelos” e “especies”, e aplicamos a função <code>predict</code>. Em resumo, <code>predict</code> serve para prever valores tendo como base um modelo (você pode se aprofundar nessa função clickando <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/predict.lm">aqui</a>). Conseguimos prever então os tamanho das sépalas (Sepal.Length).</p>
+</div>
+</div>
+<div id="manipulações-de-listas" class="section level1">
+<h1>Manipulações de listas</h1>
+<pre class="r"><code>especies &lt;- especies %&gt;% 
+  map(~sample_n(., 5))
+especies</code></pre>
+<pre><code>## $setosa
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.5         4.2          1.4         0.2  setosa
+## 2          5.1         3.4          1.5         0.2  setosa
+## 3          4.3         3.0          1.1         0.1  setosa
+## 4          5.3         3.7          1.5         0.2  setosa
+## 5          4.4         3.0          1.3         0.2  setosa
+## 
+## $versicolor
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 1          5.6         2.5          3.9         1.1 versicolor
+## 2          6.0         2.7          5.1         1.6 versicolor
+## 3          5.9         3.2          4.8         1.8 versicolor
+## 4          6.1         2.8          4.7         1.2 versicolor
+## 5          5.5         2.3          4.0         1.3 versicolor
+## 
+## $virginica
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+## 1          6.8         3.2          5.9         2.3 virginica
+## 2          6.4         2.8          5.6         2.2 virginica
+## 3          6.3         3.3          6.0         2.5 virginica
+## 4          7.9         3.8          6.4         2.0 virginica
+## 5          5.8         2.7          5.1         1.9 virginica</code></pre>
+</div>
+<div id="referências" class="section level1">
+<h1>Referências</h1>
+<p><a href="https://www.rebeccabarter.com/blog/2019-08-19_purrr/" class="uri">https://www.rebeccabarter.com/blog/2019-08-19_purrr/</a></p>
+<p><a href="https://jennybc.github.io/purrr-tutorial/" class="uri">https://jennybc.github.io/purrr-tutorial/</a></p>
+<p>&lt;&gt;</p>
 </div>
 
 

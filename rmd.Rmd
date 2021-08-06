@@ -104,7 +104,7 @@ A função `modify()` possui uma variação interessante. A `modify_if()` permit
 
 ```{r}
 modify_if(vetor_ex,
-          function(x) x >= 9,
+          ~ . >= 9,
           funcao1)
 ```
 
@@ -119,14 +119,14 @@ dados <- iris
 knitr::kable(head(dados, 10))
 ```
 
-Como estamos trabalhando com uma base de dados, as funções serão aplicadas em cada coluna. Por exemplo, ao aplicar uma função para resumir de alguma maneira os dados, ela irá fazer isso para cada uma das colunas. Vamos começar utilizando a função `n_distinct` do pacote `dplyr` que nos retorna o número de valores distintos em cada coluna.
+Como estamos trabalhando com uma base de dados, as funções serão aplicadas em cada coluna. Por exemplo, ao aplicar uma função para resumir de alguma maneira os dados, ela irá fazer isso para cada uma das colunas. Vamos começar utilizando a função `n_distinct()` do pacote `dplyr()` que nos retorna o número de valores distintos em cada coluna.
 
 ```{r}
 dados %>% 
-  map_chr(n_distinct)
+  map(n_distinct)
 ```
 
-Observe que `map_chr` aplicou a função desejada em cada uma das 5 variáveis do nosso banco de dados e retornou o valor correspondente.
+Observe que `map()` aplicou a função desejada em cada uma das 5 variáveis do nosso banco de dados e retornou o valor correspondente. 
 
 
 Vamos começar a fazer algo mais elaborado. Podemos querer retornar algumas medidas resumos ou outras informações gerais sobre nossos dados em um quadro de dados. Essa uma maneira bem legal e útil de utilizar o `map_df()`, uma das funções mais poderosas do pacote. Basicamente utilizamos a estrutura `map_df( ~ data_frame(x = .x" )`, onde x = o nome da coluna e .x a função anônima. Pra ficar mais claro, vamos à pratica.
@@ -143,7 +143,7 @@ dados1 <- dados1 %>% map_df(~(data.frame(v_distintos = n_distinct(.x),
 dados1
 ```
 
-No exemplo acima, começamos utilizando a função `select_if()` do pacote `dplyr` para pegar, do banco de dados original, apenas as variáveis do tipo númericas e armazenamos em um outro banco de dados (apenas para facilitar o entendimento). Após isso já começamos a pensar na medidas que queremos para acrescentar no banco de dados. Adicionamos então os valores distintos de cada variável, as classes (apenas para mostrar que `select_if()` fez o que queriamos) e algumas medidas resumo como média, desvio padrão, valores máximos e mínimos. Uma observação importante é que ao utilizar essa função de `map`, o nome das variáveis são perdidos, por isso ao fim do código foi utilizado o `.id` (argumento de `map_df()`) para incluir o nome das variáveis. Veja o resultado. 
+No exemplo acima, começamos utilizando a função `select_if()` do pacote `dplyr` para pegar, do banco de dados original, apenas as variáveis do tipo númericas e armazenamos em um outro banco de dados (apenas para facilitar o entendimento). Após isso já começamos a pensar na medidas que queremos para acrescentar no banco de dados. Adicionamos então os valores distintos de cada variável, as classes (apenas para mostrar que `select_if()` fez o que queriamos) e algumas medidas resumo como média, desvio padrão, valores máximos e mínimos. Uma observação importante é que ao utilizar essa função de `map()`, o nome das variáveis são perdidos, por isso ao fim do código foi utilizado o `.id` (argumento de `map_df()`) para incluir o nome das variáveis. Veja o resultado. 
 
 ```{r}
 
@@ -181,11 +181,132 @@ especie <- dados3$Species
 
 fmp2 <- function(x, y) paste("Espécie:", x, "largura:", y)
 
-map2_chr(especie, largura, fmp2) %>% head(5)
+map2(especie, largura, fmp2) %>% head(5)
 ```
 
-Acima criamos dois vetores, cada um contendo uma variável do banco de dados e depois criamos uma função simples, que irá concatenar, nesse caso, os dois vetores com algumas frases. Note que a função foi aplicada aos dois vetores. Neste caso usamos `map2_chr()` para retornar em formato de caractere. Uma observação é que no começo do exemplo criamos um outro banco de dados (dados3) com apenas as duas variáveis que foi usada no exemplo e agrupamos elas utlizando `group_by` e`summarise()`. Isso foi feito apenas para que fosse possível ver os resultados com observações diferentes na saida da função.
+Acima criamos dois vetores, cada um contendo uma variável do banco de dados e depois criamos uma função simples, que irá concatenar, nesse caso, os dois vetores com algumas frases. Note que a função foi aplicada aos dois vetores. Uma observação é que no começo do exemplo criamos um outro banco de dados (dados3) com apenas as duas variáveis que foi usada no exemplo e agrupamos elas utlizando `group_by()` e`summarise()`. Isso foi feito apenas para que fosse possível ver os resultados com observações diferentes na saida da função.
 
 
 É possível utilizar o `map()` para mais de dois objetos. Neste caso não existe um `map3()` ou `map4()` mas sim o `pmap()`. `pmap()` é basicamente uma generalização de `map2()` para 3 ou mais objetos. Essa função possui uma pequena diferença, nesse caso você não irá especificar n objetos dentro da função, mas sim apenas uma única lista que contém todos os vetores (ou listas).
+
+
+###  Um uso um pouco mais elaborado de "map2()"
+
+Veja o exemplo a seguir
+
+```{r}
+especies <- iris %>%  
+  split(.$Species)
+
+modelos <- especies %>% 
+  map(~ lm (Sepal.Length ~ Petal.Length, iris ))
+
+map2(modelos, especies, predict)
+
+
+
+```
+
+Primeiro usamos a função `split()` que divide os dados de entrada (x) em grupos diferentes (f). Um breve exemplo de como a função funciona.
+
+```{r}
+sp <- c(a = 1, b = 25, b = "exemplo", a = "split", a = 3)
+sp
+
+split(sp, f = names(sp))
+
+```
+
+No caso do nosso exemplo o objeto "especies" vai ser uma lista com as 3 `Species` presentes no banco de dados iris.
+
+Depois partimos para criar o nosso modelo. Com ajuda da função `map()`, utilizamos a função `lm()` para criar o nosso modelo de regressão linear. A função `lm()` possui vários argumentos e maneiras de utilizar, não é nosso foco aprofundar nessa função, mas você pode saber mais clickando  [aqui](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm). De maneira geral, fornecemos a função A variável preditora (ou independente) que nesse caso foi `Petal.Length` e a variável dependente (aquela que estamos tentando prever) que foi `Sepal.Length`, o segundo argumento é o banco de dados, nesse caso "iris", note o modelo segue “YVAR ~ XVAR”. Vamos dar uma olhada apenas em uma parte da função para entender melhor
+
+
+```{r}
+especies %>% 
+  map(~ lm (Sepal.Length ~ Petal.Length, iris ))
+```
+
+
+O modelo linear retornou o comprimento da pétala (Petal.Length) de acordo com nosso comportamento de dados de entrada, comprimento da sépala (Sepal.Length). Note que para esse caso, para este banco de dados,  os valores retornados em cada espécie são os mesmos. 
+
+
+Por fim fizemos o uso de `map2()` com os os objetos "modelos" e "especies", e aplicamos a função `predict()`. Em resumo, `predict()` serve para prever valores tendo como base um modelo (você pode se aprofundar nessa função clickando [aqui](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/predict.lm)). Conseguimos prever então os tamanho das sépalas (Sepal.Length).
+
+
+# Manipulações de listas 
+
+Para mostrar algumas funções do purr que nos auxiliam na manipulação de listas, vamos tranfosrmar o banco de dados que estamos usando (iris) em uma lista de quadro de dados. Já fizemos isso no exemplo anterior, mas aqui para garantir que seja fácil de seguir e visualizar, vamos usar apenas 5 linhas de cada espécie.
+
+
+```{r}
+dados4 <- iris %>%  
+  split(.$Species) %>%  
+  map(~ sample_n(., 5))
+
+dados4
+
+```
+
+### `keep(), discard() e compact()`
+
+A função `keep()` e `discard()` são bem parecidas e _opostas_. `keep()` mantém apenas os elementos de uma lista que satisfazem uma determinada condição enquanto `discard()` faz exatamente o oposto (descarta quaisquer elementos que satisfaçam sua condição lógica). Essas funções possuem 2 argumentos principais, ".x" uma lista ou vetor e ".p" uma função de predicado. Apenas aqueles elementos .pavaliados como `TRUE` serão mantidos ou descartados, em outras palavras, a sua condição. Também é possível, como terceiro argumento, fornecer rgumentos adicionais transmitidos para ".p". `compat()` é uma função com argumentos parecidos com as anteriores, a diferença é que para essa função, o ".p" é uma função que é aplicada a cada elemento de .x e somente aqueles elementos ".p" avaliados como um vetor vazio (`NULL` ou listas com comprimento zero) serão descartados.
+
+
+```{r}
+
+dados4 %>% 
+  keep(~{mean(.x$Petal.Width) > 0.5})
+
+dados4 %>% 
+  discard(~{mean(.x$Petal.Width) > 0.5})
+
+
+list(a = "a", b = NULL, c = integer(0), d = NA, e = list()) %>%
+  compact()
+```
+
+
+### `every()`, `some()` e `none()`
+
+Caso a gente queira saber se Todos, alguns ou nenhum dos elementos de uma lista satisfazem um determinado critério, podemos usar as funções `every()`, `some()` e `none()`, respectivamente. Essas funções são básicas e possuem apenas dois argumentos, sendo o primeiro uma lista ou vetor e o segundo o critério. A saída da função sera valores lógicos (`TRUE` ou `FALSE`).
+
+
+```{r}
+dados4 %>% 
+  every(~{mean(.x$Petal.Width) > 0.5})
+
+dados4 %>% 
+  some(~{mean(.x$Petal.Width) > 0.5})
+
+dados4 %>% 
+  none(~{mean(.x$Petal.Width) > 20})
+
+```
+
+
+Aqui podemos puxar um gancho para uma outra fução de pesquisa que também retorna um valor lógico, `has_element`. Basciamente serve para testar se uma lista ou vetor contém um determinado objeto, a função tem o seguinte formato: 
+
+- `has_element(.x, .y)`
+
+onde `.x` é a lista ou  vetor e `.y` o objeto para testar
+
+```{r}
+
+has_element(dados$Petal.Width, 1.0)
+
+has_element(dados$Species, 1.0)
+```
+
+
+### `reduce()`
+
+
+
+# Referências
+
+<https://www.rebeccabarter.com/blog/2019-08-19_purrr/>
+
+<https://jennybc.github.io/purrr-tutorial/>
+
 
