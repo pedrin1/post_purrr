@@ -320,11 +320,35 @@ has_element(dados$Species, 1.0)
 
 ### `detect()`
 
+A função `detect()` serve para encrontar o valor ou posição da primeira correspondência. Em outras palavras, ela retorna o primeiro elemento que passa no teste ou condição lógica.
+ 
+- `detect(.x, .f, ..., .right = FALSE, .p)` 
+
+`.x` é o argumento da função onde você fornece uma lista ou vetor atômico, `.f` uma função, fórmula ou vetor atômico.
+ 
+Se uma fórmula , por exemplo `~ .x + 2`, ela é convertida em uma função. Existem três maneiras de se referir aos argumentos:
+
+- Para uma função de argumento único, use `.`
+
+- Para uma função de dois argumentos, use `.x` e `.y`
+
+- Para mais argumentos, utilização `..1`, `..2`, `..3` etc
+
+Vamos a um exemplo simples para entender melhor a função. 
+
+```{r}
+
+exemplo <- list( "exemplo", 4, 2, "purrr" , "DasLab" , 3) 
+detect(exemplo, is.numeric)
+
+```
+Como dito antes, ela irá retornar o primeiro valor que responde ao critério usado (segundo argumento). Quando se trata de funções deste tipo (detectar), o pacote `stringr` pode ser mais interessante. Já fizemos um post muito massa sobre este pacote, basta clickar [aqui](https://daslab-ufes.github.io/stringr/) para acessá-lo.  
+
+
 
 *****
-
-
-*Fazer comentário geral sobre outras funções disponíveis no pacote.*
+O `purrr` possui diversar funções, muitas delas não aperecam nesse post. Aqui focamos em explicar as funções que são mais utilizadas e algumas mais simples. As funções de `purrr` possuem uma sintaxe muito parecida, então se entender bem as funções que trouxemos aqui, as outras serão bem fáceis de entender. Vale lembrar que pode acesar o cheatsheets para ver todas as funções  clickando [aqui](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf).  
+ 
 
 
 # Referências
@@ -333,4 +357,4 @@ has_element(dados$Species, 1.0)
 
 <https://jennybc.github.io/purrr-tutorial/>
 
-
+<https://www.r-bloggers.com/2020/05/one-stop-tutorial-on-purrr-package-in-r/>
