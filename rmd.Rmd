@@ -5,7 +5,7 @@ date: "06/07/2021"
 output: html_document
 ---
 
-Neste post vamos falar de mais um pacote da família tidyverse: o `purrr`. `purrr` é um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o `purrr` focando na sua principal função: `map()`.  
+Neste post vamos falar de mais um pacote da família tidyverse: o `purrr`. O `purrr` é um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP, do inglês functional programming), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o `purrr` focando na sua principal função: `map()`.  
 
 Como já dito, o pacote pertence ao `tidyverse` então você pode carregá-lo pelo usando o comando `library(tidyverse)` ou separadamente `library(purrr)`. Para os exemplos do post iremos trabalhar com um banco de dados `iris` que o próprio R possui. Você pode carregar bases de dados que o R possui utilizando o comando `data()`
 
@@ -17,11 +17,11 @@ library(ggplot2)
 ```
 
 
-# _"map()"_
+# map()
 
 Dentre as diversas funções do pacote `purrr` uma das mais conhecidas e utilizadas é a `map()` e suas variações, nada mais justo do que começar falando dela. Essa função (e suas variações) é usada para aplicar a mesma ação/função a todos elementos de um objeto. Esses objetos podem ser uma lista, um vetor, variáveis de um banco de dados, etc. Esse tipo de função é muito útil para evitar usar *loops* e `for`'s.
   
-Se em algum momento você já fez uso da família de funções `apply()` você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções `apply()` e `map()`. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um  contexto. Em questão de tempo bruto de execução, a família `apply()` é ligeiramente mais rápida (a diferença é bem pequena), porém as funções de `map()` são mais convenientes. Todas as suas variações seguem a mesma ordem de argumentos (o primeiro argumento é sempre o vetor), diferente da família `apply()`, onde os argumentos podem mudar. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de `map()`), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções obtidas por meio de pacotes, neste caso o `purrr`.
+Se em algum momento você já fez uso da família de funções `apply()` você pode ter percebido uma certa semelhança entre elas. Existem algumas discussões entre o uso das funções `apply()` e `map()`. Não é o foco deste post fazer uma comparação aprofundada sobre essas funções, mas podemos trazer alguns pontos. De forma geral, escolher qual delas usar vai depender de um contexto. Em questão de tempo bruto de execução, a família `apply()` é ligeiramente mais rápida (a diferença é bem pequena), porém as funções de `map()` são mais convenientes. Todas as suas variações seguem a mesma ordem de argumentos (o primeiro argumento é sempre o vetor), diferente da família `apply()`, onde os argumentos podem mudar. Existem mais pontos a serem considerados, mas em resumo, se ignorar questões de sintaxe e funcionalidade (as variações de `map()`), decidir qual delas usar restringe-se a usar as funções base do R ou utilizar funções obtidas por meio de pacotes, neste caso o `purrr`.
 
 Voltando ao foco, vamos mostrar algumas variações (não todas) de `map()`.
   
@@ -68,7 +68,7 @@ lista_ex %>%
   map_dbl(sd)
 ```
 
-Note também que fizemos o uso da função junto com o *pipe* e é bem comum essa prática. Lembrando que já explicamos como utilizar o *pipe*,  caso tenha alguma dúvida você pode acessar o post que contém essa explicação clicando [aqui](https://daslab-ufes.github.io/tidyverse/).
+Note também que fizemos o uso da função junto com o *pipe* (`%>%`) e é bem comum essa prática. Lembrando que já explicamos como utilizar o *pipe*,  caso tenha alguma dúvida você pode acessar o post que contém essa explicação clicando [aqui](https://daslab-ufes.github.io/tidyverse/).
 
 Nos exemplos acima utilizamos uma função criada por nós e outras já presentes dentro do R. Além dessas, também é possível utilizar o que chamamos de funções anônimas. Uma função anônima é basicamente uma função criada e usada, mas nunca atribuída a um objeto. Esse tipo de função é bem útil dentro do `map()`. Para usar essa função você começa com um `~` (para indicar que você começou uma função anônima). O argumento da função é consultado utilizando o `.x` ou apenas `.`, diferente das funções normais onde você consegue usar qualquer argumento. Para ficar mais claro vamos a um exemplo.
 
@@ -87,7 +87,7 @@ vetor_ex %>%
 
 Acima mostramos maneiras diferentes de utilizar funções anônimas. Todas retornam o mesmo resultado (e deveriam). Um destaque para a última onde foi usado `{}`. O uso das chaves é interessante para organização e boas práticas no seu código, principalmente se a sua função for mais complexa.  
 
-Uma função muito útil também é a `modify()`. Ela funciona de forma igual à função `map()`, a diferença é que ela sempre irá retornar um objeto do mesmo tipo que o objeto de entrada. Por exemplo, se meu objeto de entradar um vetor de caracteres, a saída também será um vetor de caracteres. Note que isso pode ser considerado como uma boa prática e já fizemos um post sobre isso no software R disponível [aqui](https://daslab-ufes.github.io/boas-praticas/).
+Uma função muito útil também é a `modify()`. Ela funciona de forma igual à função `map()`, a diferença é que ela sempre irá retornar um objeto do mesmo tipo que o objeto de entrada. Por exemplo, se meu objeto de entrada for um vetor de caracteres, a saída também será um vetor de caracteres. Note que isso pode ser considerado como uma boa prática e já fizemos um post sobre isso no software R disponível [aqui](https://daslab-ufes.github.io/boas-praticas/).
 
 
 ```{r}
@@ -147,7 +147,7 @@ No exemplo acima, começamos utilizando a função `select_if()` do pacote `dply
 knitr::kable(head(dados1))
 ```
 
-# _"map2()"_
+# map2()
 
 Após obtermos uma certa noção de como funcionam as funções de `map()` podemos falar de sua outra versão, a `map2()`. Essa função segue os mesmos critérios que a `map()` "original", porém permite que você trabalhe não só com um, mas com dois objetos. Em `map2()` também conseguimos especificar o tipo de saída da função, segue abaixo a lista de algumas das variações da função.
 
@@ -270,9 +270,9 @@ dados4 <- iris %>%
 dados4
 ```
 
-### `keep(), discard() e compact()`
+### keep(), discard() e compact()
 
-A função `keep()` e `discard()` são bem parecidas e _opostas_. `keep()` mantém apenas os elementos de uma lista que satisfazem uma determinada condição, enquanto `discard()` faz exatamente o oposto (descarta quaisquer elementos que satisfaçam a condição lógica). Essas funções possuem 2 argumentos principais, `.x` uma lista ou vetor e `.p` uma função. Apenas aqueles elementos `.p` avaliados como `TRUE` serão mantidos ou descartados. Também é possível, como terceiro argumento, fornecer argumentos adicionais transmitidos para ".p". `compact()` é uma função com argumentos parecidos com as anteriores, a diferença é que para essa função, o `.p` é uma função que é aplicada a cada elemento de `.x` e somente aqueles elementos `.p` avaliados como um vetor vazio (`NULL` ou listas com comprimento zero) serão descartados.
+A função `keep()` e `discard()` são bem parecidas e _opostas_. `keep()` mantém apenas os elementos de uma lista que satisfazem uma determinada condição, enquanto `discard()` faz exatamente o oposto (descarta quaisquer elementos que satisfaçam a condição lógica). Essas funções possuem 2 argumentos principais, `.x` uma lista ou vetor e `.p` uma função. Apenas aqueles elementos `.p` avaliados como `TRUE` serão mantidos ou descartados. Também é possível, como terceiro argumento, fornecer argumentos adicionais transmitidos para ".p". A função `compact()` tem argumentos parecidos com as funções anteriores, a diferença é que para essa função, o `.p` é uma função que é aplicada a cada elemento de `.x` e somente aqueles elementos `.p` avaliados como um vetor vazio (`NULL` ou listas com comprimento zero) serão descartados.
 
 ```{r}
 
@@ -288,7 +288,7 @@ list(a = "a", b = NULL, c = integer(0), d = NA, e = list()) %>%
 ```
 
 
-### `every()`, `some()` e `none()`
+### every(), some() e none()
 
 Caso a gente queira saber se todos, alguns ou nenhum dos elementos de uma lista satisfazem um determinado critério, podemos usar as funções `every()`, `some()` e `none()`, respectivamente. Essas funções são básicas e possuem apenas dois argumentos, sendo o primeiro uma lista ou vetor, e o segundo argumento é o critério. A saída da função será valores lógicos (`TRUE` ou `FALSE`).
 
@@ -318,9 +318,9 @@ has_element(dados$Species, 1.0)
 ```
 
 
-### `detect()`
+### detect()
 
-A função `detect()` serve para encrontar o valor ou posição da primeira correspondência. Em outras palavras, ela retorna o primeiro elemento que passa no teste ou condição lógica.
+A função `detect()` serve para encontrar o valor ou posição da primeira correspondência. Em outras palavras, ela retorna o primeiro elemento que passa no teste ou condição lógica.
  
 - `detect(.x, .f, ..., .right = FALSE, .p)` 
 
@@ -347,7 +347,7 @@ Como dito antes, ela irá retornar o primeiro valor que responde ao critério us
 
 
 *****
-O `purrr` possui diversar funções, muitas delas não aperecam nesse post. Aqui focamos em explicar as funções que são mais utilizadas e algumas mais simples. As funções de `purrr` possuem uma sintaxe muito parecida, então se entender bem as funções que trouxemos aqui, as outras serão bem fáceis de entender. Vale lembrar que pode acesar o cheatsheets para ver todas as funções  clickando [aqui](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf).  
+O `purrr` possui diversar funções, muitas delas não aperecam nesse post. Aqui focamos em explicar as funções que são mais utilizadas e algumas mais simples. As funções de `purrr` possuem uma sintaxe muito parecida, então se entender bem as funções que trouxemos aqui, as outras serão bem fáceis de entender. Vale lembrar que pode acesar o cheatsheets para ver todas as funções  clicando [aqui](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf).  
  
 
 
