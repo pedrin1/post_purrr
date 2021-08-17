@@ -2,10 +2,10 @@
 title: "ronronando"
 author: "Pedro de Brito"
 date: "06/07/2021"
-output: html_document
+output: github_document
 ---
 
-Neste post vamos falar de mais um pacote da família tidyverse: o `purrr`. O `purrr` é um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP, do inglês functional programming), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o `purrr` focando na sua principal função: `map()`.  
+Neste post vamos falar de mais um pacote da família tidyverse: o `purrr`. O `purrr` é um pacote que possui diversas ferramentas para trabalhar com funções e vetores. Muitas funções do pacote tem como objetivo aprimorar o uso da programação funcional (FP, do inglês _functional programming_), já que o R não é uma linguagem diretamente ligada a FP. FP é, em resumo, quando seu código é organizado em funções que realizam as operações de que você precisa, ou seja, em muitos casos você cria suas próprias funções. Aqui vamos tentar mostrar como usar o `purrr` focando na sua principal função: `map()`.  
 
 Como já dito, o pacote pertence ao `tidyverse` então você pode carregá-lo pelo usando o comando `library(tidyverse)` ou separadamente `library(purrr)`. Para os exemplos do post iremos trabalhar com um banco de dados `iris` que o próprio R possui. Você pode carregar bases de dados que o R possui utilizando o comando `data()`
 
@@ -347,7 +347,7 @@ Como dito antes, ela irá retornar o primeiro valor que responde ao critério us
 
 
 *****
-O `purrr` possui diversar funções, muitas delas não aperecam nesse post. Aqui focamos em explicar as funções que são mais utilizadas e algumas mais simples. As funções de `purrr` possuem uma sintaxe muito parecida, então se entender bem as funções que trouxemos aqui, as outras serão bem fáceis de entender. Vale lembrar que pode acesar o cheatsheets para ver todas as funções  clicando [aqui](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf).  
+O `purrr` possui diversas funções, muitas delas não aperecam nesse post. Aqui focamos em explicar as funções que são mais utilizadas e algumas mais simples. As funções de `purrr` possuem uma sintaxe muito parecida, então se entender bem as funções que trouxemos aqui, as outras serão bem fáceis de entender. Vale lembrar que você pode acessar o cheatsheets para ver todas as funções  clicando [aqui](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf).  
  
 
 
